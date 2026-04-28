@@ -1,0 +1,1400 @@
+* The C 
+** Fundamentals of C Language
+*** First c program
+
+Anything starts with two slashes,//, until the end of the line is a comment and it will not
+be executed. To make multiple lines as comments, you can place them between/* and */ . The
+following lines in the code are all comments:
+
+#+begin_src C
+// this code is written by Pedram
+# include < stdio .h >
+// the main function
+int main ( void ) {
+/* calling " printf " function
+the " defination " is included in " stdio " library */
+printf ( " Hello , McMaster !\ n " ) ;
+}
+#+end_src
+
+-> So the first line which is really executed is =include <stdio.h>= . Usually at the beginning of
+a code, we include libraries used in the code. =include <stdio.h>= tells C to read header file
+named =stdio= with extension =.h= which stands for header file. In this library the definition of
+function =printf= is mentioned
+
+-> The second line that will be executed is =int main(void)= as a function. In C, defining a
+function starts with the type of value the function returns, which in this case it is =int= . The =int=
+means integer and the function =main= will automatically return the value 0 if there is no error in
+the code.
+
+-> The =main= is the name of function. This function must be included in all C programs, and you
+have to write your code inside this function.
+
+->Between the parentheses, =void= what inputs your program needs and requires the user to give
+the input(s) every time the code is going to be executed. In this case, we don’t have any input so
+it is =void= , or we can define =int main()= instead of =int main(void)= . Both means the program
+requires no input(s).
+
+-> Anything between ={= , right after =int main(void)= , and =}= , at the end of the code, is called
+compound statement or code block, which belongs to =main= function. So the following state-
+ment is the general format that we have to include in all C programs:
+#+begin_src C
+Inclduing Library
+int main () {
+your statements
+}
+#+end_src
+-> In this code, =printf("Hello, McMaster!\n")= is the only statement we have and =printf=
+function is used to print a text. Between =(= and =)= the arguments for the function =printf= is
+given, which is a string or text to be printed!
+
+A string is sequence of characters enclosed within quotation marks.
+="Hello, McMaster!\n"= is the string that will be printed. The backslash =\= before =n= tells C to go to (n)ext line after
+printing =Hello, McMaster!= . Try to compile and run the code two times with =\n= and two times
+without =\n= and see the difference in the terminal! At the end of this line there is =;= indicating
+the command for this line has ended. A reminder, the closing bracket =}= at the end, means the
+end of function =main= !
+***  From Source Code to Execution: Compiling and Running
+Now we have to convert the program, the file =Hello.c= , to a format that machine can under-
+stand and execute. It usually involves, *Pre-processing*, *Compiling*, and *Linking*. During
+*Pre-processing* some modification will be done automatically to the code, before making the
+executable *object* code in *Compiling* step. These two steps are done at the same time and
+automatically, so won’t need to be worried about it! In the Linking step, the library included will
+be linked to the executable file. Since this code is using a standard library, =<stdio.h>= , it happens
+automatically. Again, you don’t need to be worried!!!
+
+To compile the program in UNIX based OS, usually =cc= is used. Open a terminal in the
+directory where =Hello.c= file is located (please refer to the section Shell Basics on Linux). Type
+=cc Hello.c= . Check out the directory. A new executable *object* file named a.out by default
+will be created.
+
+ Now it is time to tell the machine to run the translated code and show us the
+result. Run =./a.out= in the terminal. Again, make sure you are in the directory where =a.out= is
+located. It is done! you should be able to see the result!
+
+I have mentioned the name =a.out= is given to the *object* file by default. I can define any name
+I want. Lets remove the previous object file by =rm a.out= and make a new one with the name
+*”Brad”* by using =cc -o Brad Hello.c= . The compiler =cc= has many options, and =-o= means
+translate the program =Hello.c= to the machine language with an (o)bject file named =Brad= . Now
+you must be able to see an *object* file named =Brad= in the same directory. If you run the command
+line =./Brad= in the same directory, you should be able to see the output.
+
+***  Integer Data Type
+In contemporary C compilers, there is support for a range of integer sizes spanning from 8 to 64
+bits. However, it is worth noting that the specific names assigned to each size of integer may differ
+among different compilers, leading to potential confusion among developers. First we need to know
+how data is stored in computers.
+
+****  Binary Representation
+The range of numbers can be saved as =signed= integer in C is from −2^(N−1) to 2^(N −1) −1.
+
+* Concepts and keywords
+** type casting
+** Placeholders or Format Specifiers in C
+
+*** What Are Format Specifiers?
+In C, printf() and scanf() use format specifiers as placeholders to represent different data types in the input/output. They tell the functions how to interpret or display data.
+
+Basic Syntax for printf():
+#+BEGIN_SRC c
+printf("format string", argument1, argument2, ...);
+#+END_SRC
+
+The format string contains text and specifiers (starting with %) that are replaced by the values of the arguments.
+
+*** Common Format Specifiers
+
+**** 1. Integer Specifiers
+- %d or %i — Signed decimal integer
+- %u — Unsigned decimal integer
+- %o — Octal integer
+- %x or %X — Hexadecimal integer (lower/uppercase)
+
+#+BEGIN_SRC c
+int age = 25;
+printf("Age: %d\n", age);       // Output: Age: 25
+printf("Age in hex: %x\n", age); // Output: Age in hex: 19
+#+END_SRC
+
+**** 2. Floating-Point Specifiers
+- %f — Decimal notation (e.g., 3.140000)
+- %e or %E — Scientific notation (e.g., 3.14e+00)
+- %g or %G — Compact scientific/decimal (auto-chooses)
+- %.2f — Precision specifier (2 decimal places)
+
+#+BEGIN_SRC c
+float pi = 3.14159;
+printf("Pi: %f\n", pi);       // Output: Pi: 3.141590
+printf("Pi: %.2f\n", pi);     // Output: Pi: 3.14
+#+END_SRC
+
+**** 3. Character & String Specifiers
+- %c — Single character
+- %s — String of characters
+
+#+BEGIN_SRC c
+char grade = 'A';
+char name[] = "Alice";
+printf("Name: %s, Grade: %c\n", name, grade);
+// Output: Name: Alice, Grade: A
+#+END_SRC
+
+**** 4. Other Specifiers
+- %p — Pointer address (in hexadecimal)
+- %% — Prints a literal % character
+
+*** Format Specifiers with Modifiers
+You can combine specifiers with modifiers for better control:
+
+**** 1. Width
+- %10d — Minimum width of 10 characters (right-aligned by default)
+- %-10d — Left-aligned
+
+#+BEGIN_SRC c
+printf("%10d\n", 42);  // Output: "         42"
+printf("%-10d\n", 42); // Output: "42         "
+#+END_SRC
+
+**** 2. Precision
+- %.5s — Print only first 5 characters of a string
+
+#+BEGIN_SRC c
+printf("%.5s\n", "HelloWorld"); // Output: Hello
+#+END_SRC
+
+**** 3. Length Modifiers
+- %ld — long int
+- %lld — long long int
+- %lf — double (for scanf())
+- %Lf — long double
+
+#+BEGIN_SRC c
+long long bigNumber = 1234567890123;
+printf("%lld\n", bigNumber);
+#+END_SRC
+
+*** Format Specifiers in scanf()
+In scanf(), specifiers indicate the expected input type. Important: Use & for variables (except strings).
+
+#+BEGIN_SRC c
+int num;
+float price;
+printf("Enter an integer and a float: ");
+scanf("%d %f", &num, &price);
+#+END_SRC
+
+*** Common Mistakes to Avoid
+1. Type Mismatch — Using %f for double in printf() works (due to default promotion), but in scanf(), use %lf for double.
+2. Forgetting & — In scanf(), using %d without & for an integer causes undefined behavior.
+3. Wrong Specifier for Data Type — Using %d for a float leads to incorrect output.
+
+*** Quick Reference Table
+| Specifier | Data Type       | Input/Output           |
+|-----------+-----------------+------------------------|
+| %d / %i   | int             | I/O decimal integer    |
+| %f        | float / double  | I/O floating-point     |
+| %lf       | double          | Input (scan)           |
+| %c        | char            | I/O single character   |
+| %s        | char[] (string) | I/O string (no spaces) |
+| %p        | Pointer         | Output address         |
+
+*** Advanced: Escape Sequences
+While not format specifiers, these are often used with printf():
+- \n — Newline
+- \t — Tab
+- \\ — Backslash
+- \" — Double quote
+
+*** Example Program
+#+BEGIN_SRC c
+#include <stdio.h>
+
+int main() {
+    int items = 5;
+    float cost = 9.99;
+    char itemName[] = "Apples";
+
+    printf("Item: %s\n", itemName);
+    printf("Quantity: %d\n", items);
+    printf("Cost per item: $%.2f\n", cost);
+    printf("Total: $%.2f\n", items * cost);
+
+    return 0;
+}
+#+END_SRC
+
+Output:
+#+BEGIN_EXAMPLE
+Item: Apples
+Quantity: 5
+Cost per item: \$9.99
+Total: \$49.95
+#+END_EXAMPLE
+
+*** Key Takeaway
+Format specifiers are placeholders that tell C how to interpret or display data. Master them, and you'll have precise control over input/output operations!
+* @ANTIREZ course
+#+begin_comment yt playlist link
+https://youtube.com/playlist?list=PLrEMgOSrS_3cFJpM2gdw8EGFyRBZOyAKY&si=ejPqIBciAtZhbCKE
+#+end_comment
+
+#+begin_text his github 
+https://gist.github.com/antirez
+#+end_text
+
+** lec1
+- compilation, cc -S for assembly, hexdump command, cc -02 file.c for optimization like it uses =puts= function instead of =printf=
+- cc -W -Wall file.c even if the program is compilable we use it so that when coplier feels something is not okey it'll give the error
+
+- simple c program
+  #+begin_src c
+  #include <stdio.h>
+
+  int main(void){
+      printf(" Hello World\n");
+      return 0;
+
+    }
+  #+end_src
+  here int is the return type of the function we write it before the function name
+ the function accepts the argument after =(= , here the main function is not taking any argument so we wrote =void= if we don't write void it also means it is not taking the argument
+
+ we use the printf function that is defined in the =stdio.h= header file if don't include the =stdio.h= for the printf function we have to write =int printf(const char * restrict format, ...); instead , this is called function prototype something this is what he mentioned
+
+ we can aslo write the some code in let's say =file.c= and we can include it in the =main.c= where we had to write this code 
+** lec2
+- main function is the starting of the c program it need not to be called from anywhere
+  #+begin_src c
+  #include <stdio.h>
+
+  int sum(int a , int b){
+      return a+b;
+    }
+
+  int main(void){
+      printf("Hello World %d\n", sum(10,20));
+      return 0:
+    }
+  #+end_src
+  =main= is the starting point of evry c program , we have to call the =sum= function
+
+- in c we can not write the top level function without them being indside a function
+  #+begin_src c
+  #include <stdio.h>
+
+  printf("Hello\n);
+  #+end_src
+  we can not write this
+
+- we can intialize a variable with an expression
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+     int  a = 10;
+     int  b = 20;
+     int  c = a+b;
+
+      printf("sum: %d\n", );
+      return 0;
+    }
+  #+end_src
+  we used the expression earlier with the return statement
+  - in initailization the assignement if the value occurs during the defination of the variable
+  - above variables are local variables
+
+    #+begin_src c
+    -
+      ,#+begin_src c
+      #include <stdio.h>
+
+      int sum(int a , int b){
+          int c;
+
+          c = a+b;
+          return c;
+        }
+
+      int main(void){
+          printf("Hello World %d\n", sum(10,20));
+          return 0:
+        }
+  #+end_src
+  here the =printf= must resolve it's argument first befor being executed since it does't know the return type of the sum , the c compiler will first execute =sum= and then =printf=
+
+  the c variable is the local variable means that it gets crated when the sum function is called
+  during the intialization space is made for c and it gets assigned the value of a+b
+  when sum passes control back to main function variable c no longer exists, it won't exist after the function =return=
+
+  actually when we call the sum function theree variables a, b and c gets crated and when the function returns all three gets destroyed
+
+
+- the question is what is the use of return statement in the main function since it does't get called
+  the answer is the return statement of the main function indicates the operating system if the program was successful or not
+  - usually in unix if a program returns 0 means it was successful
+
+** lec 2.a
+*** Local Variables in C and Assembly (x86)
+
+**** What are Local Variables?
+***** Definition
+- Declared inside a function
+- Scope: only within that function
+- Lifetime: created on function call, destroyed on return
+- Stored in: stack (usually)
+
+***** Example
+#+begin_src c
+int add() {
+    int a = 5;
+    int b = 7;
+    int c = a + b;
+    return c;
+}
+#+end_src
+
+---
+
+**** Stack Basics
+***** Concept
+- Stack = LIFO (Last In First Out)
+
+***** Uses
+- Local variables
+- Function calls
+- Return addresses
+
+***** Important Registers
+- rsp → stack pointer (top of stack)
+- rbp → base pointer (start of current frame)
+
+---
+
+**** Stack Frame Layout
+***** Structure
+
+Higher memory
+-------------
+Return address
+Old rbp        ← rbp
+-------------
+Local variables:
+a → [rbp-4]
+b → [rbp-8]
+c → [rbp-12]
+-------------
+Lower memory
+
+---
+
+**** Assembly Walkthrough
+***** Code
+#+begin_src asm
+add:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 16
+
+    mov DWORD PTR [rbp-4], 5
+    mov DWORD PTR [rbp-8], 7
+
+    mov eax, DWORD PTR [rbp-4]
+    add eax, DWORD PTR [rbp-8]
+    mov DWORD PTR [rbp-12], eax
+
+    mov eax, DWORD PTR [rbp-12]
+
+    leave
+    ret
+#+end_src
+
+---
+
+**** Instruction Meaning
+***** Stack Setup
+- push rbp → save old base pointer
+- mov rbp, rsp → create new stack frame
+- sub rsp, 16 → allocate memory
+
+***** Data Movement
+- mov [rbp-X], value → store variable
+- mov eax, [rbp-X] → load variable
+
+***** Arithmetic
+- add eax, ... → perform addition
+
+***** Function End
+- leave → restore stack
+- ret → return to caller
+
+---
+
+**** Variables as Memory
+***** Key Idea
+- Variable names don’t exist in assembly
+- They become memory offsets
+
+***** Example
+#+begin_src c
+a
+#+end_src
+
+#+begin_src asm
+[rbp - 4]
+#+end_src
+
+---
+
+**** Registers
+***** General Purpose
+- eax → accumulator
+- ebx → base
+- ecx → counter
+- edx → data
+
+***** 64-bit Versions
+- rax, rbx, rcx, rdx
+
+***** Special
+- rsp → stack pointer
+- rbp → base pointer
+
+---
+
+**** Data Types
+***** Sizes
+- BYTE  → 1 byte
+- WORD  → 2 bytes
+- DWORD → 4 bytes
+- QWORD → 8 bytes
+
+***** Example
+#+begin_src asm
+DWORD PTR [rbp-4]
+#+end_src
+
+---
+
+**** Execution Flow
+***** Steps
+1. Setup stack frame
+2. Allocate space
+3. Store variables
+4. Compute using registers
+5. Store result
+6. Return via eax
+7. Clean stack
+8. Return
+
+---
+
+**** Key Takeaways
+***** Summary
+- Local variables live on the stack
+- Accessed using rbp offsets
+- Registers are used for computation
+- Stack frame = function workspace
+
+** lec 3
+#+begin_src C
+#include <stdio.h>
+
+void incr(void){
+     int x = 1;
+     x = x+1;
+     printf("%d\n", x);
+
+}
+
+int main(void){
+    incr();
+    incr();
+    incr();
+    incr();
+
+    return 0;
+}
+#+end_src
+
+now we introduce the concept of global variables
+#+begin_src C
+#include <stdio.h>
+
+int x=1;
+
+void incr(void){
+     x=x+1;
+     printf("%d\n", x);
+}
+
+int main(void){
+  incr();
+  incr();
+  return 0;
+}
+#+end_src
+in the =incr= function there is no local variable name =x,=  when compiling the compiler will encounter the =x= inside the =incr= function  and since there is no local variable name =x= it'll find the global variable =x= and will use it
+
+the global variable x gets crated at the beggining of the program's execution and will exist as long as the program continues to run, as long as the process exists
+
+- local variables and the global are the only variables c has
+
+- now we'll see another type which is global variable but is defined inside a function
+  if we write =static= before defining our variable
+  this variable becomes the global variable only the function sees
+  #+begin_src C
+  #include <stdio.h>
+
+  void incr(void){
+    static x = 1;
+    x = x+1;
+    printf("%d\n", x);
+
+    }
+
+  int main(void){
+      incr();
+      incr();
+      //printf("%d\n", x); this will give error cuz main can't see x
+      incr();
+      return 0;
+    }
+  #+end_src
+
+
+-
+  #+begin_src C
+  #include <stdio.h>
+
+  int incr(int x){
+      x = x+1;
+      return x;
+    }
+
+  int main(void){
+      int a = 10;
+      incr(a);
+      printf("%d\n", a); // here we won't see 11
+
+    }
+  #+end_src
+  both x and a are local variables
+
+   #+begin_src C
+  #include <stdio.h>
+
+  int incr(int x){
+      x = x+1;
+      return x;
+    }
+
+  int main(void){
+      int a = 10;
+      a = incr(a);
+      printf("%d\n", a); // now we'll see 11
+
+    }
+  #+end_src
+
+- we can format numbers in a certain way for example we can tell =printf= to format integers as hexadecimal number
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+   int a = 10;
+   float y = 1.234;
+   printf("%x %.3f\n", a, y); // output: a 1.234
+   return 0;
+}
+#+end_src
+if we write it like this
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+   int a = 10;
+   float y = 1.234;
+   printf("%x %.3f\n", y, a); 
+   return 0;
+}
+#+end_src
+it'll give warnings but the program gets compiled anyway and the output will be something random number
+
+-- unsigned int, char, unsigned char 
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+   int a = 10;
+   short s = 400;
+   float y = 1.234;
+   printf("%x %f\n", s, y); 
+   return 0;
+}
+#+end_src
+this does't give any warnings cuz c has automatic conversion laws , here =short= will first get to promoted to an =int=
+
+-
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+      char c = 128;
+      printf("%d\n", c); // output: -128
+      return 0;
+
+    }
+  #+end_src
+  char can only have maximum value 127 and minimum value -128 , if we pass char equals 128 it'll give warning and the output will be -128 it is like wrapping overflow
+
+      #+begin_src C
+      #include <stdio.h>
+
+      int main(void){
+          char c = 128;
+          int i = c+1;
+          printf("%d\n", i); // output: 128
+          return 0;
+
+        }
+  #+end_src
+  automatic conversion rules also applies to expressions
+
+** lec 4
+=sizeof()= function and =<limits.h>= header file 
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int x = 5;
+    printf("Hello World: int is %lu bytes\n", sizeof(x));
+    return 0;
+
+}
+#+end_src
+
+
+- sometimes we want to subtract pointers from each other that can result in negative value
+- in C functions are called by writing their name , opening the round bracket and giving a list of arguments
+  sometimes a function might not have any arguments at all in which case it'll be like for example =clear()=
+
+  - some unix commands he used
+    =clear | hexdump -C=
+    =more ASCII= , =esc= in ocatal is =033= and in hexadecimal it is =1b=
+    =hexdump -C hello_world.c=
+
+ - in c you can write however you want indentation is for humans to read
+
+ - he said
+   #+begin_src C
+   #include <stdio.h>
+
+   void clear(void){
+        printf("\x1b[H");
+     }
+
+   int main(void){
+       clear();
+       printf("Hello World\n");
+       return 0;
+   }
+   #+end_src
+   he said this program will clear the screen before printing Hello World , but it did't work for me
+
+  #+begin_src C
+   #include <stdio.h>
+
+   void clear(void){
+        printf("\x1b[2J");
+     }
+
+   int main(void){
+       clear();
+       printf("Hello World\n");
+       return 0;
+   }
+   #+end_src
+   instead this worked for me in a weird way
+
+
+- check out =<stdint.h>=, =intptr_t=, =uintptr_t=, =size_t=, =int64_t=, =uint64_t=
+
+** lec5
+literal types,
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    char a = 'A';
+    printf("%d\n", a); // output: 65
+    return 0;
+}
+#+end_src
+
+string is a literal type in c
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    printf("%s", "Hello World");
+    return 0;
+}
+#+end_src
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    printf("[%c%C%C%C]\n", 65, 66, 67, 68); //output: [ABCD]
+    printf("[%c%C%C%C]\n", 65, 'x', 67, 68); //output: [AxCD] 
+    return 0;
+}
+#+end_src
+
+in C strings are nothing more then arrays of type char, and char is a 8 bit integer 
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    char str[6] = {'h', 'e', 'l', 'l', 'o', 0};
+    printf("%s\n", str); //output: hello 
+}
+#+end_src
+here 0 is null terminator, 0 indicates the termination of the string
+
+-- =%s= format spacifier maybe the function of =%c= character spacifier
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    char str[6] = {'h', 'e', 'l', 'l', 'o', 0};
+    int i = 0;
+    while(str[i] != 0){
+       printf("%c", str[i]);
+       i++;
+    }
+     printf("\n");
+     return 0;
+}
+#+end_src
+
+- for strings we can use this format
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+      char str[6] = {'h', 'e', 'l', 'l', 'o', 0};
+      char str2[6] = "hello" //like this
+
+      printf("%s %s\n", str, str2);
+      return 0; 
+    }
+  #+end_src
+
+  if we write =str[4] = "hello"= it'll give the error "intializer-string for the char array is too long"
+  and if we write =str[8] = "hello"= then there won't be any warnings because it got more space then needs
+  but we don't have spacify we can just write =str[] = "hello"= it'll compile without any errors
+
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+      char str[] = "hello";
+      printf("%s\n", str);
+      printf("sizeof: %lu\n", sizeof(str)); // output: sizeof: 6
+      return 0;
+}
+  #+end_src
+
+    #+begin_src C
+      #include <stdio.h>
+
+      int main(void){
+          char str[] = "hello";
+          str[3] = 'X';
+          printf("%s\n", str); // output: helXo
+          return 0;
+    }
+  #+end_src
+
+      #+begin_src C
+      #include <stdio.h>
+
+      int main(void){
+          char str[] = "hello";
+          str[3] = 65;
+          printf("%s\n", str); // output: helAo
+          return 0;
+    }
+  #+end_src
+
+        #+begin_src C
+      #include <stdio.h>
+
+      int main(void){
+          char str[] = "hello";
+          str[3]++;
+          printf("%s\n", str); // output: helmo
+          return 0;
+    }
+  #+end_src
+  
+** lec6
+in C opening and closing curly braces ={}= called a block
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int i = 5;
+
+    if(i > 3){
+      printf("i > 3\n");
+    }else{
+      printf("i <= 3\n");
+    }
+    return 0;
+}
+#+end_src
+
+if the =if= is followed by single statement there is no need to put curly braces ={}=
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int i = 5;
+
+    if(i > 3) printf("i > 3\n");
+    return 0;
+}
+#+end_src
+
+we can also write like this , this program compiles without problem
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int i = 5;
+
+    if(i > 3)
+      printf("i > 3\n");
+    else
+      printf("i <= 3\n");
+    return 0;
+}
+#+end_src
+
+inside curly braces we can declare variables that will only be visibal inside this block
+we can declare block anywhere*
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    {
+      int i = 5;
+      printf("i is %d\n", i);
+    }
+
+    printf("i is %d\n", i); // this will give error cuz it can't see i
+    return 0;
+
+}
+
+#+end_src
+i is only local to that block in which it is declared outside the block it does't exist
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int i = 8;
+    {
+      int i = 5;
+      printf("i is %d\n", i); // i is 5
+    }
+
+    printf("i is %d\n", i); // i is 8
+    return 0;
+
+}
+
+#+end_src
+
+can use pointers for the storage location
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+    int i = 8;
+    {
+      int i = 5;
+      printf("i (%zu bytes) is stored at %p\n", sizeof(i), &i);
+    }
+
+    printf("i (%zu bytes) is stored at %p\n", sizeof(i), &i);
+    return 0;
+
+}
+
+#+end_src
+
+16:00 last
+
+** lec8 conway's game of life
+
+#+begin_example Mapping 2D grid coordinates (x, y) to a linear array index
+- Mapping 2D grid coordinates (x, y) to a linear array index:
+  index = y * width + x
+
+- Mapping a linear index back to (x, y):
+  x = index % width
+  y = index / width   ; integer division
+
+- width = number of columns in the grid
+
+- Example (3 rows × 4 columns):
+  (0,0) (1,0) (2,0) (3,0)
+  (0,1) (1,1) (2,1) (3,1)
+  (0,2) (1,2) (2,2) (3,2)
+
+  Linear layout:
+  [ (0,0) (1,0) (2,0) (3,0)
+    (0,1) (1,1) (2,1) (3,1)
+    (0,2) (1,2) (2,2) (3,2) ]
+
+- In C:
+  int index = y * width + x;
+  int x = index % width;
+  int y = index / width;
+
+- Accessing flattened array:
+  grid[y * width + x]
+
+- Important:
+  Ensure x < width and y < height to avoid out-of-bounds access
+  #+end_example
+
+*** 2D Grid with Wrap-Around Logic
+- Mapping 2D grid coordinates (x, y) to a linear array index:
+  index = y * width + x
+
+- Mapping a linear index back to (x, y):
+  x = index % width
+  y = index / width   ; integer division
+
+- To implement wrap-around for grid coordinates:
+  - For x (horizontal axis):
+    ```c
+    x = (x + width) % width;
+    ```
+  - For y (vertical axis):
+    ```c
+    y = (y + height) % height;
+    ```
+
+- This ensures that if `x` or `y` exceeds the bounds of the grid, it wraps around to the other side.
+
+- Example (3 rows × 4 columns):
+  (0,0) (1,0) (2,0) (3,0)
+  (0,1) (1,1) (2,1) (3,1)
+  (0,2) (1,2) (2,2) (3,2)
+
+  Linear layout:
+  [ (0,0) (1,0) (2,0) (3,0)
+    (0,1) (1,1) (2,1) (3,1)
+    (0,2) (1,2) (2,2) (3,2) ]
+
+- In C (with wrap-around):
+  ```c
+  #include <stdio.h>
+
+  int toIndex(int x, int y, int width, int height) {
+      // Wrap x and y if they are out of bounds
+      x = (x + width) % width;
+      y = (y + height) % height;
+      
+      return y * width + x;
+  }
+
+  void toXY(int index, int width, int height, int *x, int *y) {
+      // Convert linear index back to x, y
+      *x = index % width;
+      *y = index / width;
+      
+      // Ensure x and y are within bounds (optional step, since we are mapping index directly)
+      *x = (*x + width) % width;
+      *y = (*y + height) % height;
+  }
+
+  int main() {
+      int width = 4, height = 3;
+
+      // Example of wrapping around
+      int x = 5, y = 2;  // out of bounds for x
+      int index = toIndex(x, y, width, height);
+
+      printf("Wrapped Index: %d\n", index);
+
+      int rx, ry;
+      toXY(index, width, height, &rx, &ry);
+
+      printf("Wrapped Coordinates: x = %d, y = %d\n", rx, ry);
+
+      return 0;
+      }
+** lec 9 pointers
+
+
+#+begin_src C
+#include <stdio.h>
+
+int main(void){
+  int x = 5;
+  int *y = 0;
+  printf("%d\n, x);
+  printf("%p\n, y);
+  return 0;
+         
+  
+}
+#+end_src
+if you are writing =*y==  =0= or =NULL= it's a same thing it'll output =(nil)= in my case
+
+- we write =&= operator before a variable to get it's memory address like =&x=
+
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+       int x = 5;
+       int *y = NULL;
+       printf("%d\n, x);
+
+       y = &x;       
+
+       printf("x is stored at the address: %p\n, y);
+       return 0;
+
+
+  }
+#+end_src
+it'll output the x's address in hexadecimal
+
+- in c we declare the type of pointer because it tells us what type of data is stored at that memory address
+
+- to change the value in that memory address we can not write =y = 10= instead we write =*y = 10= this will change the value in that address means the value of now is 10;
+
+  #+begin_src C
+  #include <stdio.h>
+
+  int main(void){
+       int x = 5;
+       int *y = NULL;
+       printf("%d\n, x);
+
+       y = &x;       
+
+       printf("x is stored at the address: %p\n, y);
+       *y = 10;
+       printf("x now is %d\n", x);       
+
+       return 0;
+
+
+  }
+#+end_src  
+
+  now see here we did't write =int *y = 10= instead we wrote =*y = 10= because the pointer is type integer this is what declaring the pointer type is for.
+  
+  the pointer =y= is 8 byte even though we declared it =int=
+
+  we can also write like this =y[0] = 10= to change the value of x because there is a strange equivalence in C between pointers and arrays
+
+    #+begin_src C
+    #include <stdio.h>
+
+    int main(void){
+         int x = 5;
+         int *y = NULL;
+         printf("%d\n, x);
+
+         y = &x;       
+
+         printf("x is stored at the address: %p\n, y);
+         y[0] = 10;
+         printf("x now is %d\n", x);       
+
+         return 0;
+
+
+    }
+#+end_src
+
+    #+begin_src C
+    #include <stdio.h>
+
+    void incr(int *p){
+          *p = *p + 1;
+      }
+
+    int main(void){
+         int x = 5;
+         int *y = NULL;
+         printf("%d\n, x);
+
+         y = &x;       
+
+         printf("x was: %d\n, x);
+         incr(y);
+         incr(y);
+         printf("x now is %d\n", x); // output: 7       
+
+         return 0;
+
+
+    }
+#+end_src
+
+integer at address p equals the integer at address p +1
+
+the incr function will take whatever currently at this memory address, add one to it and store it in the same memory address
+
+we can also call the =incr= function like this =incr(&x)=
+
+p will be the memory address where x is stored and the comiler knows this is the memory address where an integer is stored
+
+    #+begin_src C
+    #include <stdio.h>
+
+    void incr(int *p){
+          p[0] = p[0] + 1;
+      }
+
+    int main(void){
+         int x = 5;
+         int *y = NULL;
+         printf("%d\n, x);
+
+         y = &x;       
+
+         printf("x was: %d\n, x);
+         incr(y);
+         incr(y);
+         printf("x now is %d\n", x); // output: 7       
+
+         return 0;
+
+
+    }
+#+end_src
+
+** lec10
+** lec12  A First Encounter with Malloc()
+- in pascal style string the first byte is the length of the string called frefixed length string
+
+- =putchar()= :
+
+  so we are writing a pascal style string (prefixed length string) program
+
+  #+begin_src C
+    #include <stdio.h>
+
+  /* Intialize a prefixed length string with the specified
+   ,* string in 'init' of length 'len'
+   ,*
+   ,* Warning: this function does not check for buffer overflow. */
+    void ps_create(char *s,char *init,int len){
+        unsigned char *lenptr = (unsigned char*)s;
+        ,*lenptr = len;
+        for(int i = 0;  i < *lenptr; i++){
+            s[i+1] = init[i];
+        }
+    }
+
+  /*Display the string 's' on the screen. */
+    void ps_print(char *s){
+        unsigned char *lenptr = (unsigned char*)s;
+        for(int i=0; i<*lenptr; i++){
+        putchar(s[i+1]);
+        }
+        printf("\n");
+    }
+
+
+    int main(void){
+        char buf[255];
+        ps_create(buf, "Hello World", 11);
+        ps_print(buf);
+        return 0;
+
+    }
+
+  #+end_src
+
+
+- in this program we can write the null terminator and it still works because this time the length is fixed
+
+  #+begin_src C
+  #include <stdio.h>
+
+void ps_create(char *s,char *init,int len){
+	unsigned char *lenptr = (unsigned char*)s;
+	*lenptr = len;
+	for(int i = 0;  i < *lenptr; i++){
+		s[i+1] = init[i];
+	}
+}
+void ps_print(char *s){
+	unsigned char *lenptr = (unsigned char*)s;
+	for(int i=0; i<*lenptr; i++){
+	putchar(s[i+1]);
+   	}
+	printf("\n");
+}
+
+
+int main(void){
+	char buf[255];
+	ps_create(buf, "Hell\000 World", 11);
+	ps_print(buf);
+	return 0;
+
+}
+
+  #+end_src
+
+- c has manual memory allocation
+
+#+begin_src C
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Initialize a prefixed length string with the specified
+ * string in 'init' of length 'len'.
+ *
+ * the crated string have the following layout:
+ *
+ * +-+----------\\\\
+ * |L|My string here
+ * +-+----------\\\\
+ *
+ * where L is one unsigned byte sating the total length of the string.
+ * Thus this string are binary safe: zero bytes are permittes in the middle.
+ *
+ * Warning: this function does not check for buffer overflow. */
+
+char *ps_create(char *init,int len){
+	char *s = malloc(1+len);
+	unsigned char *lenptr = (unsigned char*)s;
+	*lenptr = len;
+	for(int i = 0;  i < len; i++){
+		s[i+1] = init[i];
+	}
+	return s;
+}
+void ps_print(char *s){
+	unsigned char *lenptr = (unsigned char*)s;
+	for(int i=0; i<*lenptr; i++){
+	putchar(s[i+1]);
+   	}
+	printf("\n");
+}
+
+
+int main(void){
+	char *mystr = ps_create("Hello World", 11);
+	ps_print(mystr);
+	return 0;
+
+}
+
+#+end_src
+
+- the memory we allocated with =malloc()= is still valid when the =ps_create()= function returns because the memory crated with =malloc()= remains valid until there is a =free()= call on that pointer to free that area 
+
+- =free()= function frees allocation that were crated by `malloc`
+
+- now we allocate one more byte to add the null terminator at the end
+
+  #+begin_src C
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  /* Initialize a prefixed length string with the specified
+   ,* string in 'init' of length 'len'.
+   ,*
+   ,* the crated string have the following layout:
+   ,*
+   ,* +-+----------\\\\
+   ,* |L|My string here
+   ,* +-+----------\\\\
+   ,*
+   ,* where L is one unsigned byte sating the total length of the string.
+   ,* Thus this string are binary safe: zero bytes are permittes in the middle.
+   ,*
+   ,* Warning: this function does not check for buffer overflow. */
+
+  char *ps_create(char *init,int len){
+      char *s = malloc(1+len+1);
+      unsigned char *lenptr = (unsigned char*)s;
+      ,*lenptr = len;
+      for(int i = 0;  i < len; i++){
+          s[i+1] = init[i];
+      }
+      s[len+1] = 0;
+      return s;
+  }
+  void ps_print(char *s){
+      unsigned char *lenptr = (unsigned char*)s;
+      for(int i=0; i<*lenptr; i++){
+      putchar(s[i+1]);
+      }
+      printf("\n");
+  }
+
+  /* Return the pointer to the null terminated c string embedded inside our PS string 's'. */
+  char *ps_get_c_string(char *s){
+       return s+1;
+    }
+
+
+  int main(void){
+      char *mystr = ps_create("Hello World", 11);
+      ps_print(mystr);
+      printf("%S\n", mystr);
+      printf("%s\n", ps_get_c_string(mystr));
+      free(mystr);
+      return 0;
+
+  }
+
+
+  #+end_src
+
+- if we had not freed the memory in this spacific case , when the process dies or exits the operating system frees all the allocated memory that the process has allocated but we have to write correct program and so release the memory even if we are about to exit the program 
+
+#+begin_comment
+  Stack (local variables)
+- Lives inside function
+- Destroyed after return
+- ❌ Never return pointers to it
+
+Heap (malloc)
+- Lives until free()
+- Survives function return
+- ✅ Safe to return
+
+Static
+- Lives for entire program
+- Shared across calls
+- ⚠️ Use carefully 
+#+end_comment
+
+** lec13
+seems like gotta study more of function, malloc, pointer and struct.

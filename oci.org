@@ -1,0 +1,124 @@
+* the start
+** oci introduction
+*** core constructs of oci physical architecture
+- *region* : region is a localized geographic area comprising of one or more availability domains.
+  
+- *Availability doamins*: availability domains are one or more fault-tolerant data centers located within a region but connected to each other by a low latency high-bandwidth network.
+  
+- *Fault-domains*: fault domains is a grouping of hardware and infrastructure within an availability doamin to provide anti- affinity  (logical data centers)
+
+-  they have *cloude offering* called dedicated region cloud@Costomer
+
+-- how to choose a region:
+1. choose a region closest to your users for low latency and high performance
+2. data residency & compliance( many countries has strict data residency requirements
+3. service availability: new cloud services are made available based on regional demand, regulatory compliance, resource availability and other factors.
+**** Availability Domains in OCI In Oracle Cloud Infrastructure (OCI),
+an Availability Domain (AD) is one of the most fundamental concepts for designing resilient and highly available systems.
+
+***** 1. The Simple Definition An Availability Domain is essentially an isolated, standalone data center within an OCI Region.
+
+    Region: A geographic area (like Ashburn, Virginia or Phoenix, Arizona).
+    Availability Domain: A specific physical building within that area.
+
+***** 2. Key Characteristics of an Availability Domain
+****** Physical Isolation ADs are designed so that they do not share single points of failure. One AD has its own independent power, cooling, and physical security. If a fire or power outage takes down one data center, the other ADs in the region remain completely unaffected.
+
+****** High-Speed Connectivity Although ADs are physically separated (usually miles apart to prevent a single natural disaster from affecting both), they are connected to each other via a very low-latency, high-bandwidth network. This allows you to replicate data between ADs almost instantly without suffering the latency of going over the public internet.
+
+****** Independent Infrastructure Each AD contains its own compute, storage, and networking resources.
+
+***** 3. How Many ADs are in a Region?
+Most OCI regions have three Availability Domains (labeled as =AD-1=, =AD-2=, and =AD-3= in the OCI Console). However, some smaller or newer regions might only have one.
+
+It is important to note that you cannot choose which AD your resources go into from a drop-down list; OCI assigns you an AD based on your tenancy to ensure capacity is balanced across the data centers.
+
+***** 4. Availability Domains vs. Fault Domains
+(Crucial Distinction) People often confuse ADs with Fault Domains, but they are different levels of isolation:
+
+    Availability Domain: Protects against data center failure. (e.g., The whole building loses power).
+    Fault Domain: Protects against rack/hardware failure within an AD.
+        Each AD is further divided into 3 Fault Domains.
+        A Fault Domain is essentially a group of server racks. If you deploy two compute instances in the same AD but in /different/ Fault Domains, they will sit on different physical racks with different power and network switches. If a single rack catches fire, your other instance is safe.
+
+***** 5. Why Do Availability Domains Matter?
+The primary purpose of ADs is to enable High Availability (HA) and Disaster Recovery (DR). If you put all your application servers and databases in a single AD, and that AD experiences a failure, your application goes down completely.
+
+However, if you architect your application across multiple ADs, your application can survive the loss of an entire data center.
+
+Common architectures include:
+
+    Active-Active: You run web servers in AD-1 and AD-2. A Load Balancer distributes traffic between them. If AD-1 goes down, the Load Balancer automatically sends all traffic to AD-2. Zero downtime.
+    Data Replication: You run your primary database in AD-1 and set up a standby database in AD-2 using Oracle Data Guard. If AD-1 fails, you failover to the database in AD-2.
+
+***** 6. Best Practices for Using Availability Domains
+
+    Distribute Compute: Always deploy critical compute instances across multiple ADs (or at least multiple Fault Domains if you only have one AD).
+    Use Regional Subnets: OCI allows you to create either "AD-Specific Subnets" or "Regional Subnets". It is a best practice to use Regional Subnets, which span all ADs in the region. This makes it much easier to deploy resources across ADs and move IPs between them during a failover.
+    Use the Load Balancer: The OCI Load Balancer is a Regional resource. It automatically spans all ADs. Place your load balancer at the front, and it will route traffic to healthy instances in whichever ADs are currently operating.
+    Backups across ADs: When taking manual or scheduled backups of Block Volumes or databases, OCI automatically stores those backups across multiple ADs so they are safe even if the primary AD is destroyed.
+
+***** Summary Analogy Imagine you are safeguarding a valuable book (your data/application):
+
+    Fault Domain: You make two copies of the book and put them on different bookshelves in the same room. (Protects against a bookshelf collapsing).
+    Availability Domain: You put the original book in a house on Elm Street, and the copy in a house on Oak Street. (Protects against a house fire).
+    Region: You put a third copy in a house in a completely different city. (Protects against a city-wide earthquake).
+*** oci console walkthrough
+
+- authentication(who are you) and authorization( what permissions you have) 
+- compartment: is a logical isolation for resources
+- how to identify oci resources: by oracle cloud ID (OCID)
+- Tenancy: fancy name for account
+- root compartment can hold all cloud resources
+
+
+You can find out more about Cloud Shell, the CLI and the SDKs here:
+
+    *  Cloud Shell Overview: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+    *  OCI CLI Overview: https://docs.oracle.com/iaas/Content/API/Concepts/cliconcepts.htm
+    *  OCI Interactive CLI Overview: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliusing_topic-Using_Interactive_Mode.htm
+    *  OCI SDKs Guides: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdks.htm
+    *  OCI SDKs Cloud Shell Quickstarts: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/developerquickstarts.htm
+    *  Oracle Cloud Infrastructure CLI Command Reference: https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/
+
+
+
+
+** Identity and Access Management
+*** introduction
+*** compartments
+- collection of related resources
+- compartments are nothing but logical containers for your resources
+- when you create tenancy you get a root compartment
+- you can create multiple compartments within root compartment like network compartment has network resources
+- each resource belongs to single compartment
+- groups + policies = access to compartment
+- resource in one compartment can interact with the resource in another compartment via virtual cloud network
+- resource can also be moved from one compartment to another
+- resources from multiple regions can be in a same compartment
+  all the compartment you create are global and they are available in every region you have access to
+- you can write policies to prevent users from accessing resources in a spacific region
+- compartments can also be nested so you have upto 6 levels of nesting provided by the compartments
+- you can set quotas and budgets on compartments so you can say in perticular compartment you can not create a bare metal machine and you can say that if the usage in a particular compartment goes beyond $1k you'd get flagged and you get notified
+*** demo: creating compartments  and identity domains
+- identity domains you can think of them as containers for your users, groups and security configuration
+*** AuthN and AutZ
+**** principal
+principal is an IAM entity that is allowed to intrtact with OCI resources
+- there are two kinds of principals primarily in OCI
+  one is your users and the second resources themselves can be principals for example an instance principal which actually an instance which becomes a principal which means that it can make api calls against other OCI services like storage
+
+  groups are also principal
+**** Authentication
+- username and password
+- API signing key (it uses RSA key pair)
+- (Auth)authentication tokens ( oracle generated token strings) authenticates third party APIs
+**** Authorization
+- what permissions do you have
+- authorization is done through what we call IAM policies
+***** policies
+human readable statements to define granular permissions
+- policy syntex:
+- policies can be attached to a compartment or they could be attached to a tenancy
+  if they are attached to a tenancy it applies to everything within that tenancy
+  if it is appllied to a compartment it applies to only the resources within that compartment
