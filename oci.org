@@ -1,4 +1,4 @@
-* the start
+﻿* the start
 ** oci introduction
 *** core constructs of oci physical architecture
 - *region* : region is a localized geographic area comprising of one or more availability domains.
@@ -85,6 +85,7 @@ You can find out more about Cloud Shell, the CLI and the SDKs here:
 
 
 ** Identity and Access Management
+
 *** introduction
 *** compartments
 - collection of related resources
@@ -122,3 +123,175 @@ human readable statements to define granular permissions
 - policies can be attached to a compartment or they could be attached to a tenancy
   if they are attached to a tenancy it applies to everything within that tenancy
   if it is appllied to a compartment it applies to only the resources within that compartment
+
+** networking
+*** virtual cloud network
+-     A virtual, private network that you set up in Oracle data centers. It closely resembles a traditional network, with firewall rules and specific types of communication gateways that you can decide to use. A VCN resides in a single Oracle Cloud Infrastructure region and covers one or more CIDR blocks (IPv4 and IPv6, if enabled) . The terms virtual cloud network, VCN, and cloud network are used interchangeably in this documentation.
+- A VCN resides in a single Oracle Cloud Infrastructure region.
+- https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm
+  
+*** subnet
+Subdivisions you define in a VCN (for example, 10.0.0.0/24, 10.0.1.0/24, or 2001:DB8::/64). Subnets contain virtual network interface cards (VNICs), which attach to Compute instances. Each subnet consists of a contiguous range of IP addresses (for IPv4 and IPv6, if enabled) that don't overlap with other subnets in the VCN. You can set a subnet to exist either in a single availability domain  or across an entire region (regional subnets are recommended). Subnets act as a unit of configuration within the VCN: All VNICs in a particular subnet use the same route table, security lists, and DHCP options (see the definitions that follow). You can define a subnet as either public or private when you create it. Private means VNICs in the subnet can't have public IPv4 addresses and internet communication with IPv6 endpoints is prohibited. Public means VNICs in the subnet can have public IPv4 addresses and internet communication is allowed with IPv6 endpoints
+
+*** internet gateway
+An optional virtual router that you can add to a VCN for direct internet access. For more information
+
+
+
+    An internet gateway is an optional gateway you can add to a VCN to enable direct connectivity to the internet.
+    The gateway supports connections from within the VCN (egress) and connections from the internet (ingress).
+    Resources that need to use the gateway for internet access must be in a public subnet and have public IP addresses. Resources that have private IP addresses can instead use a NAT gateway to start connections to the internet.
+    Each public subnet that needs to use the internet gateway must have a route table rule that specifies the gateway as the target.
+    You use security rules to control the types of traffic allowed in and out of resources in that subnet. Ensure that the rules allow only the appropriate types of internet traffic.
+    The internet gateway can be used only by resources in the gateway's VCN. Hosts in the connected on-premises network or in a peered VCN can't use that internet gateway.
+    You can't add or move an internet gateway to a VCN within a security zone. Security zones don't use public subnets.
+    Only one internet gateway is needed for each VCN. All public subnets within a VCN have access to the internet gateway, provided security rules and route table rules allow that access.
+
+    A specific VCN can have only one internet gateway.
+
+*** Network address translation (NAT) gateway
+Another optional virtual router that you can add to a VCN. It gives cloud resources without public IP addresses access to the internet without exposing those resources to incoming internet connections
+
+Compute instances in a private subnet don't have public IP addresses. With the NAT gateway, they can start connections to the internet and receive responses, but not receive inbound connections from the internet.
+
+When a host in the private network starts an internet-bound connection, the NAT device's public IP address becomes the source IP address for the outbound traffic. The response traffic from the internet therefore uses that public IP address as the destination IP address. The NAT device then routes the response to the host in the private network that started the connection.
+
+**** why we need NAT
+ we have private resources that need to be protected from inbound traffic from the internet. All these resources need to start connections to the internet to request software updates from sites on the internet.
+
+*** SERVICE GATEWAY
+Another optional virtual router that you can add to a VCN. It provides a path for private network traffic between a VCN and supported services in the Oracle Services Network (examples: Oracle Cloud Infrastructure Object Storage and Autonomous AI Database). For example, DB Systems in a private subnet in a VCN can back up data to Object Storage without needing public IP addresses or access to the internet.
+
+A service gateway lets a Virtual Cloud Network (VCN) privately access specific Oracle services without exposing the data to the public internet. No internet gateway or NAT gateway is required to reach those specific services. The resources in the VCN can be in a private subnet and use only private IP addresses. The tr
+
+affic from the VCN to the Oracle service travels over the Oracle network fabric and never traverses the internet.
+
+The service gateway is regional and enables access only to supported Oracle services in the same region as the VCN.
+Only one service gateway is needed for each VCN. All subnets within a VCN have access to the service gateway if the security rules and route table rules allow that access.
+
+The service gateway allows access to supported Oracle services within the region to protect your data from the internet. Some workloads might require access to public endpoints or services not supported by the service gateway (for example, to download updates or patches). Ensure you have a NAT gateway or other access to the internet.
+
+*** LOCAL PEERING GATEWAY (LPG)
+Local VCN peering is the process of connecting two VCNs in the same region so that their resources can communicate using private IP addresses without routing the traffic over the internet or through an on-premises network. The VCNs can be in the same Oracle Cloud Infrastructure tenancy  or different ones. Without peering, a VCN would need an internet gateway and public IP addresses for the instances that need to communicate with another VCN.
+
+At a high level, the Networking service components required for a local peering include:
+
+    Two VCNs in the same region whose CIDRs don't overlap
+    A local peering gateway (LPG) on each VCN in the peering relationship
+    A connection between those two LPGs
+    Route rules that enable traffic to flow over the connection, and only to and from select subnets in the respective VCNs (if wanted).
+    Security rules that control the types of traffic allowed to and from the instances in the subnets that need to communicate with the other VCN.
+
+***  Dynamic Routing Gateway (DRG)
+
+An optional virtual router that you can attach to one or many VCNs. It provides a path for private network traffic between a VCN and an on-premises network. You can use it with other Networking components and a router in an on-premises network to establish a connection by way of Site-to-Site VPN or Oracle Cloud Infrastructure FastConnect. It can also provide a path for private network traffic between a VCN and another VCN in the same region or in a different region
+
+*** REMOTE PEERING CONNECTION (RPC)
+A component that you can add to a DRG. It lets you peer one VCN with another VCN in a different region
+
+*** ROUTE TABLES
+Virtual route tables for a VCN. They have rules to route traffic from subnets to destinations outside the VCN by way of gateways or specially configured Compute instances. A VCN comes with an empty default route table, and you can add custom route tables
+
+*** public vs private ip
+*** subnetting
+*** routers 
+
+** storage
+persistence vs durability
+*** Object Storage
+ The Object Storage service provides reliable, secure, and scalable object storage. Object storage is a storage architecture that stores and manages data as objects. Some typical use cases include data backup, file sharing, and storing unstructured data like logs and sensor-generated data.
+
+  Object Storage uses buckets to organize your files. To use Object Storage, first create a bucket and then begin adding data files.
+
+  Object Storage also supports private access from Oracle Cloud Infrastructure resources in a VCN through a service gateway. A service gateway allows connectivity to the Object Storage public endpoints from private IP addresses in private subnets. For example, you can back up DB systems to an Object Storage bucket over the Oracle Cloud Infrastructure backbone instead of over the internet. You can optionally use IAM policies to control which VCNs or ranges of IP addresses can access Object Storage
+
+*** Buckets
+Buckets are logical containers for storing objects. Users or systems create buckets as needed within a region. A bucket is associated with a single compartment  that has policies 
+
+that determine what actions a user can perform on a bucket and on all the objects in the bucket.
+
+You can't nest buckets a bucket can't contain other buckets.
+*** Objects
+Any type of data, regardless of content type, is stored as an object. An object is composed of the object itself and metadata about the object. Each object is stored in a bucket.
+
+*** Namespace
+Object Storage namespace serves as the top-level container for all buckets and objects. At account creation time, each Oracle Cloud Infrastructure tenant is assigned one unique system-generated and immutable Object Storage namespace name. The namespace spans all compartments across all regions. You control bucket names, but those bucket names must be unique within a namespace. While the namespace is region-specific, the namespace name itself is the same in all regions
+
+If your tenancy is assigned a namespace name of axaxnpcrorw5, that's your namespace name in all regions. You can create a bucket named MyBucket in US West (Phoenix). You can't create another bucket named MyBucket in US West (Phoenix). You can, however, create a bucket named MyBucket in Germany Central (Frankfurt). Because the namespace name is unique to a tenant, other customers can create buckets named MyBucket in their own namespaces. 
+*** Storage Tiers
+ Object Storage offers distinct storage class tiers to address the need for both performant, frequently accessed "hot" storage, less often accessed "cool" storage, and rarely accessed "cold" storage. Every object uploaded to Object Storage is assigned to a storage tier. The storage tier property of the object determines its storage costs and any associated retrieval fees. The storage tier property is assigned to an object in one of two ways:
+
+    The object is automatically assigned the default storage tier of the bucket (Standard or Archive) that you're uploading the object to.
+    If you're uploading an object to a Standard default storage tier bucket, you can explicitly assign any permitted storage tier (Standard, Infrequent Access, or Archive) to the object.
+
+Standard storage tier buckets can contain a mix of objects with different storage tier assignments. An object remains in the Standard bucket, even if the object is archived, restored, or if tier assignment is changed.
+
+Archive Storage tier buckets can only contain objects with an Archive Storage tier assignment. Archive buckets do not contain a mix of objects with different storage tier assignments. An object remains in the Archive bucket, even if the object is restored.
+
+**** Standard Tier
+The Standard tier is the primary, default storage tier used for Object Storage service data. The Standard storage tier is "hot" storage used for data that you need to access quickly, immediately, and frequently. Data accessibility and performance justifies a higher price to store data in the Standard tier.
+
+You choose a default storage tier (Standard or Archive) when you create a bucket. When set at bucket creation, you cannot change the default storage tier for a bucket. When you upload objects to a bucket, the objects are automatically assigned the default storage tier of the bucket (Standard). You can, however, change the storage tier of an object to either Infrequent Access or Archive.
+
+Standard storage tier buckets can contain a mix of objects with different storage tier assignments. An object remains in the Standard bucket, even if the object is archived, restored, or its tier assignment is changed.
+
+When you choose a Standard default storage tier during bucket creation, you can also enable Auto-Tiering. Auto-Tiering helps you reduce storage costs by automatically moving objects between the Standard and Infrequent Access storage tiers based on data access patterns
+
+**** Infrequent Access
+The Infrequent Access tier is "cool" storage used for data that you access infrequently, but that must be available immediately when needed. Storage costs are less than Standard.
+
+If you're uploading an object to a Standard default storage tier bucket, you can explicitly assign the object to the lower-cost Infrequent Access storage tier.
+
+**** Archive
+
+The Archive tier is the primary, default storage tier used for Archive Storage service data. The Archive Storage tier is "cold" storage used for data seldom or rarely access, but that must be retained and preserved for long periods of time.
+
+You choose a default storage tier (Standard or Archive) when you create a bucket. When set at bucket creation, you cannot change the default storage tier for a bucket. When you upload objects to a bucket in an Archive tier, the objects are automatically assigned the default storage tier of the bucket (Archive).
+
+Archive Storage tier buckets can only contain objects with an Archive Storage tier assignment. Archive buckets do not contain a mix of objects with different storage tier assignments. An object remains in the Archive bucket, even if the object is restored
+
+**** Auto-Tiering
+Auto-Tiering monitors data access patterns and helps you reduce storage costs by automatically moving objects larger than 1 MiB out of the Standard tier into the more cost-effective Infrequent Access tier. Auto-Tiering is enabled at the bucket-level and monitors the data access patterns of all objects in the bucket. You can enable Auto-Tiering for any Standard storage tier bucket at creation time. You can also enable Auto-Tiering at any time after bucket creation.
+*** block volume
+
+
+The Oracle Cloud Infrastructure Block Volume service lets you dynamically provision and manage block storage volumes 
+. You can create, attach, connect, and move volumes, as well as change volume performance, as needed, to meet your storage, performance, and application requirements. After you attach and connect a volume to an instance, you can use the volume like a regular hard drive. You can also disconnect a volume and attach it to another instance without the loss of data.
+
+ Volumes are only accessible to instances in the same availability domain  . You cannot move a volume between availability domains or regions, they are only accessible within the region or availability domain they were created in. However volume backups are not limited to the availability domain of the source volume, you can restore them to any availability domain within that region
+
+  You can also copy a volume backup to a new region and restore the backup to a volume in any availability domain in the new region
+
+many VMs can read and write data from/to a single block volume
+
+- resizing block volume
+
+  online resizing - you can expand the volume size without detaching the volume from an instance
+
+- replication of block volume
+
+  we do it for disaster recovery, migration, business expansion
+
+  replication is asynchronous
+
+- volume group
+
+  block volume service provides you with the capability to group together multiple volumes in what we call volume group
+
+  you can restore an entire group of volumes from a volume group backup
+
+*** file storage
+Oracle Cloud Infrastructure File Storage service provides a durable, scalable, secure, enterprise-grade network file system. You can connect to a File Storage service file system from any bare metal, virtual machine, or container instance in your Virtual Cloud Network (VCN). You can also access a file system from outside the VCN using VCN peering, Oracle Cloud Infrastructure FastConnect, and Internet Protocol security (IPSec) virtual private network (VPN).
+
+Large Compute clusters of thousands of instances can use the File Storage service for high-performance shared storage. Storage provisioning is fully managed and automatic as your use scales from a single byte to exabytes without upfront provisioning.
+
+Oracle Cloud Infrastructure File Storage employs 5-way replicated storage, located in different fault domains, to provide redundancy for resilient data protection. Data is protected with erasure encoding.
+
+. The File Storage service is designed to meet the needs of applications and users that need an enterprise file system across a wide range of use cases, including the following:
+
+    *General Purpose File Storage*: Access to an unlimited pool of file systems to manage growth of structured and unstructured data.
+    *Big Data and Analytics*: Run analytic workloads and use shared file systems to store persistent data.
+    *Lift and Shift of Enterprise Applications*: Migrate existing Oracle applications that need NFS storage, such as Oracle E-Business Suite and PeopleSoft.
+    *Databases and Transactional Applications*: Run test and development workloads with Oracle, MySQL, or other databases.
+    *Backups, Business Continuity, and Disaster Recovery*: Host a secondary copy of relevant file systems from on premises to the cloud for backup and disaster recovery purposes.
+    *MicroServices and Docker*: Deliver stateful persistence for containers. Easily scale as your container-based environments grow.
