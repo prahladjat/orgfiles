@@ -89,6 +89,50 @@ how data is stored in computers.
 The range of numbers can be saved as =signed= integer in C is from −2^(N−1) to 2^(N −1) −1.
 
 * Concepts and keywords
+** pointer thing
+#+begin_src C
+#include <stdio.h>
+
+
+int main(void){
+
+  int a = 5;
+  int *b = &a;
+  int **c = &b;
+
+  printf("%d\n", **c);
+  
+  int *x;
+  int **y=&x;
+  int z[] = {1,2,3,4};
+
+  int size = sizeof(z)/sizeof(z[0]);
+  
+  x = z;
+  for(size_t i = 0; i < size; ++i){
+    printf("%d", x[i]);
+  }
+  printf("\n");
+  
+  for(size_t i = 0; i < size; ++i){
+    printf("%d", (*y)[i]); // *y = x , we can't write y[i] here y[0] = x but y[1] = ? !! , y points to a single ponter variable x not an array of pointers  
+  }
+  printf("\n");
+
+  for(int i = 0; i < size; ++i){
+    printf("%d", *(x+i));
+  }
+  printf("\n");
+
+  for(int i = 0; i < size; ++i){
+    printf("%d", *(*y+i)); // can't write **(y+i)
+  }
+  printf("\n");
+  
+  return 0;
+}
+
+#+end_src
 ** type casting
 ** Placeholders or Format Specifiers in C
 
@@ -1398,3 +1442,15 @@ Static
 
 ** lec13
 seems like gotta study more of function, malloc, pointer and struct.
+
+* data structure in c
+** ll
+
+
+* random copied text
+
+** yale text
+- pointer to a function
+- pointer to a struct
+- pointer to a pointer 
+  
